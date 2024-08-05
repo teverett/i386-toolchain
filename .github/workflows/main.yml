@@ -18,5 +18,9 @@ jobs:
 
     - name: install gcc
       run: brew install gcc@14
-      
+
+    - name: make toolchain
+      run: sh toolchain.sh
+
+
 
