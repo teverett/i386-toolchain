@@ -1,0 +1,22 @@
+name: CI
+
+on: [push, pull_request]
+jobs:
+  build-osx:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: brew upgrade
+      run: brew upgrade
+
+    - name: install make
+      run: brew install make
+
+    - name: install gcc
+      run: brew install gcc@14
+      
+
