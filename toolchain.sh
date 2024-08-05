@@ -29,13 +29,13 @@ if [ ! -f $BINUTILS/binutils/objdump ]; then
     fi
 
     if [ ! -d $BINUTILS ]; then
-        tar zxvf $BINUTILS.tar.gz
+        tar zxf $BINUTILS.tar.gz > /dev/null
     fi
 
     cd $BINUTILS
-    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls 2>&1 configure.log
-    make clean
-    make
+    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls > configure.log
+    make clean 
+    make > make.log
     cd ..
 fi
 
@@ -49,7 +49,7 @@ fi
     fi
 
     if [ ! -d $GCC ]; then
-        tar zxvf $GCC.tar.gz
+        tar zxf $GCC.tar.gz 
     fi
 
     cd $GCC
@@ -58,9 +58,9 @@ fi
               --disable-libmudflap --disable-libssp --enable-languages=c,c++ \
               --with-gmp=/usr/local/Cellar/gmp/6.3.0/ \
               --with-mpfr=/usr/local/Cellar/mpfr/4.2.1/ \
-              --with-mpc=/usr/local/Cellar/libmpc/1.3.1/ 2>&1 configure.log
+              --with-mpc=/usr/local/Cellar/libmpc/1.3.1/ > configure.log
 
      make clean
-     make
+     make > make.log
     cd ..
 #fi
