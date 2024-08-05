@@ -29,38 +29,56 @@ if [ ! -f $BINUTILS/binutils/objdump ]; then
     fi
 
     if [ ! -d $BINUTILS ]; then
-        tar zxf $BINUTILS.tar.gz > /dev/null
+        tar zxf $BINUTILS.tar.gz 
     fi
 
     cd $BINUTILS
-    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls > configure.log
+    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls 
     make clean 
-    make > make.log
+    make
     cd ..
 fi
+
+if [ ! -f bin/binutils ]; then
+    mkdir -p bin/binutils
+fi
+
+rm -rf  bin/binutils/*
+
+cp $BINUTILS/binutils/ar bin/binutils
+cp $BINUTILS/binutils/objcopy bin/binutils
+cp $BINUTILS/binutils/readelf bin/binutils
+cp $BINUTILS/binutils/ranlib bin/binutils
+cp $BINUTILS/binutils/libtool bin/binutils
+cp $BINUTILS/binutils/strings bin/binutils
+cd bin/binutils
+tar cf binutils.tar *
+gzip binutils.tar
+cd ..
+cd ..
 
 # gcc
 #if [ -f $GCC/binutils/objdump ]; then
 #    echo "gcc exists"
 #else
-    echo "making gcc"
-    if [ ! -f $GCC.tar.gz ]; then
-        wget http://mirror.its.dal.ca/gnu/gcc/$GCC/$GCC.tar.gz
-    fi
+#    echo "making gcc"
+#    if [ ! -f $GCC.tar.gz ]; then
+#        wget http://mirror.its.dal.ca/gnu/gcc/$GCC/$GCC.tar.gz
+#    fi
 
-    if [ ! -d $GCC ]; then
-        tar zxf $GCC.tar.gz 
-    fi
+#    if [ ! -d $GCC ]; then
+#        tar zxf $GCC.tar.gz 
+#    fi
 
-    cd $GCC
-    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls --without-headers \
-              --with-newlib --disable-threads --disable-shared \
-              --disable-libmudflap --disable-libssp --enable-languages=c,c++ \
-              --with-gmp=/usr/local/Cellar/gmp/6.3.0/ \
-              --with-mpfr=/usr/local/Cellar/mpfr/4.2.1/ \
-              --with-mpc=/usr/local/Cellar/libmpc/1.3.1/ > configure.log
+#    cd $GCC
+#    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls --without-headers \
+#              --with-newlib --disable-threads --disable-shared \
+#              --disable-libmudflap --disable-libssp --enable-languages=c,c++ \
+#              --with-gmp=/usr/local/Cellar/gmp/6.3.0/ \
+#              --with-mpfr=/usr/local/Cellar/mpfr/4.2.1/ \
+#              --with-mpc=/usr/local/Cellar/libmpc/1.3.1/ 
 
-     make clean
-     make > make.log
-    cd ..
+ #    make clean
+ #    make 
+ #   cd ..
 #fi
