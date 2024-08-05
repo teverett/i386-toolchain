@@ -22,5 +22,15 @@ jobs:
     - name: make toolchain
       run: sh toolchain.sh
 
+    - name: upload binutils configure.log
+      uses: actions/upload-artifact@v4
+      with:
+        name: binutils-configure.log
+        path: binutils-2.37/configure.log
 
-
+    - name: upload gcc configure.log
+      uses: actions/upload-artifact@v4
+      with:
+        name: gcc-configure.log
+        path: gcc-4.9.0/configure.log
+  

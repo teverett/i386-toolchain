@@ -33,7 +33,7 @@ if [ ! -f $BINUTILS/binutils/objdump ]; then
     fi
 
     cd $BINUTILS
-    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls
+    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls 2>&1 configure.log
     make clean
     make
     cd ..
@@ -58,7 +58,7 @@ fi
               --disable-libmudflap --disable-libssp --enable-languages=c,c++ \
               --with-gmp=/usr/local/Cellar/gmp/6.3.0/ \
               --with-mpfr=/usr/local/Cellar/mpfr/4.2.1/ \
-              --with-mpc=/usr/local/Cellar/libmpc/1.3.1/
+              --with-mpc=/usr/local/Cellar/libmpc/1.3.1/ 2>&1 configure.log
 
      make clean
      make
