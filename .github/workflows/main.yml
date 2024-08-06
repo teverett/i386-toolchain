@@ -19,6 +19,9 @@ jobs:
     - name: install gcc
       run: brew reinstall gcc@14
 
+    - name: show brew config
+      run: brew list
+    
     - name: make toolchain
       run: sh toolchain.sh
 
