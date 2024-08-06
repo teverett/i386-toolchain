@@ -16,6 +16,15 @@ jobs:
     - name: install make
       run: brew install make
 
+    - name: install mpc
+      run: brew install mpc
+
+    - name: install mpfr
+      run: brew install mpfr
+
+    - name: install gmp
+      run: brew install gmp
+
     - name: install gcc
       run: brew reinstall gcc@14
 
