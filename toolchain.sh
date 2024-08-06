@@ -8,11 +8,13 @@ BINUTILS=binutils-2.37
 TOOLCHAINDIR=toolchain
 HOME=`pwd`
 
+BINDIR=/usr/local/Cellar/gcc/14.1.0_2/bin/
+
 export PREFIX=$HOME/toolchain
 export TARGET=i386-elf
-export CC=/usr/local/bin/gcc-14
-export CXX=/usr/local/bin/g++-14
-export LD=/usr/local/bin/gcc-14
+export CC=$BINDIR/gcc-14
+export CXX=$BINDIR/g++-14
+export LD=$BINDIR/gcc-14
 export CFLAGS=-Wno-error=deprecated-declarations
 
 # toolchain dir
