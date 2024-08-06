@@ -3,7 +3,7 @@
 # on OSX
 # brew install gcc@14
 
-GCC=gcc-4.9.0
+GCC=gcc-9.5.0
 BINUTILS=binutils-2.37
 TOOLCHAINDIR=toolchain
 HOME=`pwd`
@@ -63,24 +63,24 @@ cd ..
 #if [ -f $GCC/binutils/objdump ]; then
 #    echo "gcc exists"
 #else
-#    echo "making gcc"
-#    if [ ! -f $GCC.tar.gz ]; then
-#        wget http://mirror.its.dal.ca/gnu/gcc/$GCC/$GCC.tar.gz
-#    fi
+    echo "making gcc"
+    if [ ! -f $GCC.tar.gz ]; then
+        wget http://mirror.its.dal.ca/gnu/gcc/$GCC/$GCC.tar.gz
+    fi
 
-#    if [ ! -d $GCC ]; then
-#        tar zxf $GCC.tar.gz 
-#    fi
+    if [ ! -d $GCC ]; then
+        tar zxf $GCC.tar.gz 
+    fi
 
-#    cd $GCC
-#    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls --without-headers \
-#              --with-newlib --disable-threads --disable-shared \
-#              --disable-libmudflap --disable-libssp --enable-languages=c,c++ \
-#              --with-gmp=/usr/local/Cellar/gmp/6.3.0/ \
-#              --with-mpfr=/usr/local/Cellar/mpfr/4.2.1/ \
-#              --with-mpc=/usr/local/Cellar/libmpc/1.3.1/ 
+    cd $GCC
+    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls --without-headers \
+              --with-newlib --disable-threads --disable-shared \
+              --disable-libmudflap --disable-libssp --enable-languages=c,c++ \
+              --with-gmp=/usr/local/Cellar/gmp/6.3.0/ \
+              --with-mpfr=/usr/local/Cellar/mpfr/4.2.1/ \
+              --with-mpc=/usr/local/Cellar/libmpc/1.3.1/ \
 
- #    make clean
- #    make 
- #   cd ..
+     make clean
+     make 
+     cd ..
 #fi
