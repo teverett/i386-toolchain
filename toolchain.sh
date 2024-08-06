@@ -36,6 +36,7 @@ if [ ! -f $BINUTILS/binutils/objdump ]; then
 
     cd $BINUTILS
     ./configure --prefix=$PREFIX --target=$TARGET --disable-nls 
+    more config.log
     make clean 
     make
     cd ..
