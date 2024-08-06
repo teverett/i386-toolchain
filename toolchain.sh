@@ -8,7 +8,7 @@ BINUTILS=binutils-2.37
 TOOLCHAINDIR=toolchain
 HOME=`pwd`
 
-BINDIR=/usr/local/Cellar/gcc/14.1.0_2/bin/
+BINDIR=/usr/local/Cellar/gcc/14.1.0_2/bin
 
 export PREFIX=$HOME/toolchain
 export TARGET=i386-elf
