@@ -2,7 +2,7 @@
 # https://pdos.csail.mit.edu/6.828/2016/tools.html#chain
 
 #brew upgrade
-#brew install gcc@11
+#brew install gcc@12
 
 # tool versions
 BINUTILSVERSION=binutils-2.21.1
@@ -10,6 +10,7 @@ GMPVERSION=gmp-5.0.2
 MPFRVERSION=mpfr-4.2.1
 MPCVERSION=mpc-1.1.0
 GCCVERSION=gcc-9.5.0
+GDBVERSION=gdb-9.2
 
 # important directories
 HOME=`pwd`
@@ -106,25 +107,45 @@ if [ ! -f $PREFIX/lib/libmpc.a ]; then
 fi
 
 # GCC
-GCCFILE=$GCCVERSION.tar.gz
-if [ ! -d $GCCVERSION ]; then
-    if [ ! -f $GCCFILE ]; then
-        wget https://ftp.gnu.org/gnu/gcc/$GCCVERSION/$GCCFILE
+if [ ! -f $PREFIX/bin/i386-elf-gcc ]; then
+    GCCFILE=$GCCVERSION.tar.gz
+    if [ ! -d $GCCVERSION ]; then
+        if [ ! -f $GCCFILE ]; then
+            wget https://ftp.gnu.org/gnu/gcc/$GCCVERSION/$GCCFILE
+        fi
+        tar zxvf $GCCFILE
     fi
-    tar zxvf $GCCFILE
+    cd $GCCVERSION
+    mkdir build
+    cd build
+    if [ ! -f Makefile ]; then
+        ../configure --prefix=$PREFIX \
+        --target=$TARGET --disable-werror --disable-nls \
+        --disable-libssp --disable-libmudflap --with-newlib \
+        --without-headers --enable-languages=c,c++ \
+        --with-gmp=$PREFIX --with-mpc=$PREFIX --with-mpfr=$PREFIX \
+        --with-as=$PREFIX \
+        --with-ld=$PREFIX
+    fi
+    make all-gcc
+    make install-gcc
+    cd ..
 fi
-cd $GCCVERSION
+
+# GDB
+GDBFILE=$GDBVERSION.tar.gz
+if [ ! -d $GDBVERSION ]; then
+    if [ ! -f $GDBFILE ]; then
+        wget https://ftp.gnu.org/gnu/gdb/$GDBFILE
+    fi
+    tar zxvf $GDBFILE
+fi
+cd $GDBVERSION
 mkdir build
 cd build
 if [ ! -f Makefile ]; then
-    ../configure --prefix=$PREFIX \
-    --target=$TARGET --disable-werror --disable-nls \
-    --disable-libssp --disable-libmudflap --with-newlib \
-    --without-headers --enable-languages=c,c++ \
-    --with-gmp=$PREFIX --with-mpc=$PREFIX --with-mpfr=$PREFIX \
-    --with-as=$PREFIX \
-    --with-ld=$PREFIX
+    ../configure --prefix=$PREFIX --target=$TARGET --disable-werror
 fi
-make all-gcc
-make install-gcc
+make
+#make install
 cd ..
