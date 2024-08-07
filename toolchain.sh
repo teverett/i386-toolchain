@@ -1,87 +1,130 @@
 #!/bin/bash
+# https://pdos.csail.mit.edu/6.828/2016/tools.html#chain
 
-# on OSX
-# brew install gcc@14
+#brew upgrade
+#brew install gcc@11
 
-GCC=gcc-9.5.0
-BINUTILS=binutils-2.37
-TOOLCHAINDIR=toolchain
+# tool versions
+BINUTILSVERSION=binutils-2.21.1
+GMPVERSION=gmp-5.0.2
+MPFRVERSION=mpfr-4.2.1
+MPCVERSION=mpc-1.1.0
+GCCVERSION=gcc-9.5.0
+
+# important directories
 HOME=`pwd`
+CELLAR=/usr/local/Cellar/gcc@11/11.4.0/bin
+TOOLCHAINDIR=toolchain
+BUILDDIR=$HOME/$TOOLCHAINDIR/build
 
-BINDIR=/usr/local/Cellar/gcc/14.1.0_2/bin
-
-export PREFIX=$HOME/toolchain
+export PREFIX=$HOME/$TOOLCHAINDIR/bin
 export TARGET=i386-elf
-export CC=$BINDIR/gcc-14
-export CXX=$BINDIR/g++-14
-export LD=$BINDIR/gcc-14
+export CC=$CELLAR/gcc-11
+export CXX=/$CELLAR/g++-11
+export LD=/$CELLAR/gcc-11
 export CFLAGS=-Wno-error=deprecated-declarations
 
-# toolchain dir
+echo "PREFIX is: $PREFIX"
+
 if [ ! -d $TOOLCHAINDIR ]; then
-    mkdir $TOOLCHAINDIR
+    mkdir -p $BUILDDIR
 fi
+
 cd $TOOLCHAINDIR
+cd build
 
-# binutils
-if [ ! -f $BINUTILS/binutils/objdump ]; then
-    echo "making binutils"
-    if [ ! -f $BINUTILS.tar.gz ]; then
-        wget http://ftpmirror.gnu.org/binutils/$BINUTILS.tar.gz
+# Binutils
+if [ ! -f $PREFIX/i386-elf/bin/ld ]; then
+    BINUTILSFILE=$BINUTILSVERSION.tar.bz2
+    if [ ! -d $BINUTILSVERSION ]; then
+        if [ ! -f $BINUTILSFILE ]; then
+            wget https://ftp.gnu.org/gnu/binutils/$BINUTILSFILE
+        fi
+        tar zxvf $BINUTILSFILE
     fi
-
-    if [ ! -d $BINUTILS ]; then
-        tar zxf $BINUTILS.tar.gz 
+    cd $BINUTILSVERSION
+    if [ ! -f Makefile ]; then
+        ./configure --prefix=$PREFIX --target=$TARGET --disable-werror
     fi
-
-    cd $BINUTILS
-    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls 
-    more config.log
-    make clean 
     make
+    make install
     cd ..
 fi
 
-if [ ! -f bin/binutils ]; then
-    mkdir -p bin/binutils
+# GMP
+if [ ! -f $PREFIX/lib/libgmp.a ]; then
+    GMPFILE=$GMPVERSION.tar.bz2
+    if [ ! -d $GMPVERSION ]; then
+        if [ ! -f $GMPFILE ]; then
+            wget https://gmplib.org/download/gmp/$GMPFILE
+        fi
+        tar zxvf $GMPFILE
+    fi
+    cd $GMPVERSION
+    if [ ! -f Makefile ]; then
+        ./configure --prefix=$PREFIX
+    fi
+    make
+    make install
+    cd ..
 fi
 
-rm -rf  bin/binutils/*
-
-cp $BINUTILS/binutils/ar bin/binutils
-cp $BINUTILS/binutils/objcopy bin/binutils
-cp $BINUTILS/binutils/readelf bin/binutils
-cp $BINUTILS/binutils/ranlib bin/binutils
-cp $BINUTILS/binutils/libtool bin/binutils
-cp $BINUTILS/binutils/strings bin/binutils
-cd bin/binutils
-tar cf binutils.tar *
-gzip binutils.tar
-cd ..
-cd ..
-
-# gcc
-#if [ -f $GCC/binutils/objdump ]; then
-#    echo "gcc exists"
-#else
-    echo "making gcc"
-    if [ ! -f $GCC.tar.gz ]; then
-        wget http://mirror.its.dal.ca/gnu/gcc/$GCC/$GCC.tar.gz
+# MPFR
+if [ ! -f $PREFIX/lib/libmpfr.a ]; then
+    MPFRFILE=$MPFRVERSION.tar.bz2
+    if [ ! -d $MPFRVERSION ]; then
+        if [ ! -f $MPFRFILE ]; then
+            wget https://www.mpfr.org/mpfr-current/$MPFRFILE
+        fi
+        tar zxvf $MPFRFILE
     fi
-
-    if [ ! -d $GCC ]; then
-        tar zxf $GCC.tar.gz 
+    cd $MPFRVERSION
+    if [ ! -f Makefile ]; then
+        ./configure --prefix=$PREFIX --with-gmp=$PREFIX
     fi
+    make
+    make install
+    cd ..
+fi
 
-    cd $GCC
-    ./configure --prefix=$PREFIX --target=$TARGET --disable-nls --without-headers \
-              --with-newlib --disable-threads --disable-shared \
-              --disable-libmudflap --disable-libssp --enable-languages=c,c++ \
-              --with-gmp=/usr/local/Cellar/gmp/6.3.0/ \
-              --with-mpfr=/usr/local/Cellar/mpfr/4.2.1/ \
-              --with-mpc=/usr/local/Cellar/libmpc/1.3.1/ \
+# MPC
+if [ ! -f $PREFIX/lib/libmpc.a ]; then
+    MPCFILE=$MPCVERSION.tar.gz
+    if [ ! -d $MPCVERSION ]; then
+        if [ ! -f $MPCFILE ]; then
+            wget https://www.multiprecision.org/downloads/$MPCFILE
+        fi
+        tar zxvf $MPCFILE
+    fi
+    cd $MPCVERSION
+    if [ ! -f Makefile ]; then
+        ./configure --prefix=$PREFIX --with-gmp=$PREFIX
+    fi
+    make
+    make install
+    cd ..
+fi
 
-     make clean
-     make 
-     cd ..
-#fi
+# GCC
+GCCFILE=$GCCVERSION.tar.gz
+if [ ! -d $GCCVERSION ]; then
+    if [ ! -f $GCCFILE ]; then
+        wget https://ftp.gnu.org/gnu/gcc/$GCCVERSION/$GCCFILE
+    fi
+    tar zxvf $GCCFILE
+fi
+cd $GCCVERSION
+mkdir build
+cd build
+if [ ! -f Makefile ]; then
+    ../configure --prefix=$PREFIX \
+    --target=$TARGET --disable-werror --disable-nls \
+    --disable-libssp --disable-libmudflap --with-newlib \
+    --without-headers --enable-languages=c,c++ \
+    --with-gmp=$PREFIX --with-mpc=$PREFIX --with-mpfr=$PREFIX \
+    --with-as=$PREFIX \
+    --with-ld=$PREFIX
+fi
+make all-gcc
+make install-gcc
+cd ..
