@@ -19,11 +19,8 @@ jobs:
     - name: install gcc
       run: brew reinstall gcc@11
 
-    - name: show cellar
-      run: ls /usr/local/Cellar/
-
-#    - name: make toolchain
-#      run: sh toolchain.sh
+    - name: make toolchain
+      run: sh toolchain.sh
 
 
   
