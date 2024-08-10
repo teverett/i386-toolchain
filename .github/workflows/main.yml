@@ -1,0 +1,31 @@
+name: CI
+
+on: [push, pull_request]
+jobs:
+
+  build-osx:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: brew upgrade
+      run: brew upgrade
+
+    - name: install make
+      run: brew install make
+
+    - name: install gcc@11
+      run: brew install gcc@11
+
+    - name: make toolchain
+      run: sh toolchain.sh
+
+    - name: upload i386_buildchain.tar.gz
+      uses: actions/upload-artifact@v4
+      with:
+        name: i386_buildchain.tar.gz
+        path: i386_buildchain.tar.gz
+  
