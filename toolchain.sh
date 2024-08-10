@@ -207,7 +207,7 @@ fi
     # cd ..
 
 rm -f $TARFILE
-tar tar $TARFILE $PREFIX/bin/*
+tar czf $TARFILE $PREFIX/bin/*
 
 echo
 cd ../..
