@@ -206,11 +206,12 @@ fi
     # #make install
     # cd ..
 
-rm -f $TARFILE
-tar czf $TARFILE $PREFIX/bin/*
 
 echo
 cd ../..
+rm -f $TARFILE
+tar czf $TARFILE $PREFIX/bin/*
+
 $PREFIX/bin/i386-elf-ld --version 
 echo
 $PREFIX/bin/i386-elf-gcc --version
