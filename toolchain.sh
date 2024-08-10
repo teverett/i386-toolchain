@@ -85,7 +85,7 @@ if [ ! -f $PREFIX/lib/libgmp.a ]; then
         fi
         if [ ! -f $GMPFILE ]; then
             echo "downloading $GMPFILE"
-            wget https://gmplib.org/download/gmp/$GMPFILE
+            wget https://www.gmplib.org/download/gmp/$GMPFILE
             cp $GMPFILE $CACHEDIR
         fi
         tar zxvf $GMPFILE
