@@ -7,7 +7,7 @@
 # tool versions
 BINUTILSVERSION=binutils-2.43
 GMPVERSION=gmp-6.3.0
-MPFRVERSION=mpfr-4.2.1
+MPFRVERSION=mpfr-4.2.1 
 MPCVERSION=mpc-1.1.0
 GCCVERSION=gcc-14.2.0
 GDBVERSION=gdb-10.2
@@ -111,7 +111,7 @@ if [ ! -f $PREFIX/lib/libmpfr.a ]; then
         fi
         if [ ! -f $MPFRFILE ]; then
             echo "downloading $MPFRFILE"
-            wget https://www.mpfr.org/mpfr-current/$MPFRFILE
+            wget https://www.mpfr.org/$MPFRVERSION/$MPFRFILE
             cp $MPFRFILE $CACHEDIR
         fi
         tar zxvf $MPFRFILE
