@@ -27,7 +27,7 @@ CELLAR=$HOMEBREW_PREFIX/Cellar/gcc@11/11.4.0/bin
 echo "HomeBrew is at: $HOMEBREW_PREFIX"
 
 export PREFIX=$HOME/$TOOLCHAINDIR/bin
-export TARGET=i386-elf
+export TARGET=i386-swarm-elf
 export CC=$CELLAR/gcc-11
 export CXX=/$CELLAR/g++-11
 export LD=/$CELLAR/gcc-11
@@ -50,7 +50,7 @@ cd $TOOLCHAINDIR
 cd build
 
 # Binutils
-if [ ! -f $PREFIX/i386-elf/bin/ld ]; then
+if [ ! -f $PREFIX/i386-swarm-elf/bin/ld ]; then
     echo "building Binutils"
     BINUTILSFILE=$BINUTILSVERSION.tar.bz2
     if [ ! -d $BINUTILSVERSION ]; then
@@ -72,7 +72,7 @@ if [ ! -f $PREFIX/i386-elf/bin/ld ]; then
     make install
     cd ..
 else
-    echo "$PREFIX/i386-elf/bin/ld exists"
+    echo "$PREFIX/i386-swarm-elf/bin/ld exists"
 fi
 
 # GMP
@@ -154,7 +154,7 @@ else
 fi
 
 # GCC
-if [ ! -f $PREFIX/bin/i386-elf-gcc ]; then
+if [ ! -f $PREFIX/bin/i386-swarm-elf-gcc ]; then
     echo "building GCC"
     GCCFILE=$GCCVERSION.tar.gz
     if [ ! -d $GCCVERSION ]; then
@@ -185,7 +185,7 @@ if [ ! -f $PREFIX/bin/i386-elf-gcc ]; then
     cd ..
     cd ..
 else
-    echo "$PREFIX/bin/i386-elf-gcc exists"
+    echo "$PREFIX/bin/i386-swarm-elf-gcc exists"
 fi
 
 # GDB
@@ -212,6 +212,6 @@ cd ../..
 rm -f $TARFILE
 tar czf $TARFILE $PREFIX/bin/*
 
-$PREFIX/bin/i386-elf-ld --version 
+$PREFIX/bin/i386-swarm-elf-ld --version 
 echo
-$PREFIX/bin/i386-elf-gcc --version
+$PREFIX/bin/i386-swarm-elf-gcc --version
